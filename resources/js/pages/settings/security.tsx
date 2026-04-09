@@ -1,31 +1,31 @@
-import { Form, Head } from '@inertiajs/react';
-import { ShieldCheck } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController';
-import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
-import PasswordInput from '@/components/password-input';
-import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes';
-import TwoFactorSetupModal from '@/components/two-factor-setup-modal';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
-import { edit } from '@/routes/security';
-import { disable, enable } from '@/routes/two-factor';
+import { Form, Head } from '@inertiajs/react'
+import { ShieldCheck } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import SecurityController from '@/actions/App/Http/Controllers/Settings/SecurityController'
+import Heading from '@/components/heading'
+import InputError from '@/components/input-error'
+import PasswordInput from '@/components/password-input'
+import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes'
+import TwoFactorSetupModal from '@/components/two-factor-setup-modal'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth'
+import { edit } from '@/routes/security'
+import { disable, enable } from '@/routes/two-factor'
 
 type Props = {
-    canManageTwoFactor?: boolean;
-    requiresConfirmation?: boolean;
-    twoFactorEnabled?: boolean;
-};
+    canManageTwoFactor?: boolean
+    requiresConfirmation?: boolean
+    twoFactorEnabled?: boolean
+}
 
 export default function Security({
     canManageTwoFactor = false,
     requiresConfirmation = false,
     twoFactorEnabled = false,
 }: Props) {
-    const passwordInput = useRef<HTMLInputElement>(null);
-    const currentPasswordInput = useRef<HTMLInputElement>(null);
+    const passwordInput = useRef<HTMLInputElement>(null)
+    const currentPasswordInput = useRef<HTMLInputElement>(null)
 
     const {
         qrCodeSvg,
@@ -37,17 +37,17 @@ export default function Security({
         recoveryCodesList,
         fetchRecoveryCodes,
         errors,
-    } = useTwoFactorAuth();
-    const [showSetupModal, setShowSetupModal] = useState<boolean>(false);
-    const prevTwoFactorEnabled = useRef(twoFactorEnabled);
+    } = useTwoFactorAuth()
+    const [showSetupModal, setShowSetupModal] = useState<boolean>(false)
+    const prevTwoFactorEnabled = useRef(twoFactorEnabled)
 
     useEffect(() => {
         if (prevTwoFactorEnabled.current && !twoFactorEnabled) {
-            clearTwoFactorAuthData();
+            clearTwoFactorAuthData()
         }
 
-        prevTwoFactorEnabled.current = twoFactorEnabled;
-    }, [twoFactorEnabled, clearTwoFactorAuthData]);
+        prevTwoFactorEnabled.current = twoFactorEnabled
+    }, [twoFactorEnabled, clearTwoFactorAuthData])
 
     return (
         <>
@@ -75,11 +75,11 @@ export default function Security({
                     resetOnSuccess
                     onError={(errors) => {
                         if (errors.password) {
-                            passwordInput.current?.focus();
+                            passwordInput.current?.focus()
                         }
 
                         if (errors.current_password) {
-                            currentPasswordInput.current?.focus();
+                            currentPasswordInput.current?.focus()
                         }
                     }}
                     className="space-y-6"
@@ -236,7 +236,7 @@ export default function Security({
                 </div>
             )}
         </>
-    );
+    )
 }
 
 Security.layout = {
@@ -246,4 +246,4 @@ Security.layout = {
             href: edit(),
         },
     ],
-};
+}
