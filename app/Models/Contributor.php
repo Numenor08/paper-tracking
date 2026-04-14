@@ -17,4 +17,11 @@ class Contributor extends Model
         'phone_number',
         'address',
     ];
+
+    public function papers()
+    {
+        return $this->belongsToMany(Paper::class, 'contributor_paper')
+            ->withPivot('roles')
+            ->withTimestamps();
+    }
 }
