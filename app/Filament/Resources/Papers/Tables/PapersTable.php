@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\Papers\Tables;
 
+use App\Models\PublicationIndex;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class PapersTable
@@ -31,6 +33,7 @@ class PapersTable
                     })
                     ->sortable(),
                 TextColumn::make('title')
+                    ->label('Artikel')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('publication')
@@ -44,9 +47,25 @@ class PapersTable
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'DRAFT' => 'DRAFT',
+                        'READY-TO-SUBMITTED' => 'READY-TO-SUBMITTED',
+                        'SUBMITTED' => 'SUBMITTED',
+                        'UNDER-REVIEW' => 'UNDER-REVIEW',
+                        'REVISION-REQUESTED' => 'REVISION-REQUESTED',
+                        'ACCEPTED' => 'ACCEPTED',
+                        'REJECTED' => 'REJECTED',
+                        'PUBLISHED' => 'PUBLISHED',
+                    ]),
+                SelectFilter::make('publication_index_id')
+                    ->label('Index')
+                    ->options(PublicationIndex::query()->pluck('name', 'id')->all()),
             ])
             ->recordActions([
                 ViewAction::make(),
