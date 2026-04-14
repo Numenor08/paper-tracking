@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Paper extends Model
+class Paper extends Model implements HasMedia
 {
-    use HasUuids;
+    use HasUuids, InteractsWithMedia;
 
     protected $fillable = [
         'title',
@@ -20,6 +23,7 @@ class Paper extends Model
         'note',
         'created_by',
         'publication_index_id',
+        'paper_media_id',
     ];
 
     public function index(): BelongsTo
@@ -40,7 +44,17 @@ class Paper extends Model
     public function contributors(): BelongsToMany
     {
         return $this->belongsToMany(Contributor::class, 'contributor_paper')
-            ->withPivot('roles')
+            ->withPivot('role')
             ->withTimestamps();
+    }
+
+    public function contributorPapers(): HasMany
+    {
+        return $this->hasMany(ContributorPaper::class, 'paper_id');
+    }
+
+    public function paperMedia(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'paper_media_id');
     }
 }

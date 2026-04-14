@@ -21,7 +21,7 @@ class Contributor extends Model
     public function papers()
     {
         return $this->belongsToMany(Paper::class, 'contributor_paper')
-            ->withPivot('roles')
+            ->withPivot('role')
             ->withTimestamps();
     }
 }
