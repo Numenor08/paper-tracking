@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Papers\Schemas;
 
+use App\Models\Paper;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
@@ -48,6 +49,44 @@ class PaperInfolist
                             ->openUrlInNewTab(),
                     ])
                     ->columns(2)
+                    ->columnSpanFull(),
+                RepeatableEntry::make('document_card')
+                    ->label('Document')
+                    ->getStateUsing(function (Paper $record): array {
+                        $media = $record->getFirstMedia('paper_documents');
+
+                        if ($media === null) {
+                            return [];
+                        }
+
+                        return [[
+                            'name' => $media->file_name,
+                            'size' => $media->human_readable_size,
+                            'open_url' => route('papers.documents.preview', $record),
+                            'download_url' => route('papers.documents.download', $record),
+                        ]];
+                    })
+                    ->schema([
+                        TextEntry::make('name')->label('File Name')->placeholder('-'),
+                        TextEntry::make('size')->label('Size')->placeholder('-'),
+                        TextEntry::make('open_url')
+                            ->label('Open')
+                            ->formatStateUsing(fn (?string $state): string => filled($state) ? 'Open document' : '-')
+                            ->url(fn (?string $state): ?string => $state)
+                            ->openUrlInNewTab(),
+                        TextEntry::make('download_url')
+                            ->label('Download')
+                            ->formatStateUsing(fn (?string $state): string => filled($state) ? 'Download document' : '-')
+                            ->url(fn (?string $state): ?string => $state)
+                            ->openUrlInNewTab(),
+                    ])
+                    ->columns(2)
+                    ->visible(fn (Paper $record): bool => $record->getFirstMedia('paper_documents') !== null)
+                    ->columnSpanFull(),
+                TextEntry::make('document_placeholder')
+                    ->label('Document')
+                    ->placeholder('Tidak ada dokumen')
+                    ->visible(fn (Paper $record): bool => $record->getFirstMedia('paper_documents') === null)
                     ->columnSpanFull(),
             ]);
     }
