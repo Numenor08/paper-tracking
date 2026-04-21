@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Paper;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class PaperSubmissionPublicationTrendChart extends ChartWidget
 {
@@ -34,11 +35,13 @@ class PaperSubmissionPublicationTrendChart extends ChartWidget
             $labels[] = $month->format('M Y');
 
             $submissionData[] = Paper::query()
+                ->visibleTo(Auth::user())
                 ->where('created_at', '>=', $month)
                 ->where('created_at', '<', $nextMonth)
                 ->count();
 
             $publicationData[] = Paper::query()
+                ->visibleTo(Auth::user())
                 ->where('status', 'PUBLISHED')
                 ->where('updated_at', '>=', $month)
                 ->where('updated_at', '<', $nextMonth)

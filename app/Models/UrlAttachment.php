@@ -10,6 +10,7 @@ class UrlAttachment extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'label',
         'url',
         'paper_id',
     ];

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Contributors;
+namespace App\Filament\Resources\Users;
 
-use App\Filament\Resources\Contributors\Pages\CreateContributor;
-use App\Filament\Resources\Contributors\Pages\EditContributor;
-use App\Filament\Resources\Contributors\Pages\ListContributors;
-use App\Filament\Resources\Contributors\Schemas\ContributorForm;
-use App\Filament\Resources\Contributors\Tables\ContributorsTable;
-use App\Models\Contributor;
+use App\Filament\Resources\Users\Pages\CreateUser;
+use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Resources\Users\Schemas\UserForm;
+use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -16,20 +15,22 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class ContributorResource extends Resource
+class UserResource extends Resource
 {
-    protected static ?string $model = Contributor::class;
+    protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shield-check';
+
+    protected static ?string $navigationLabel = 'Users';
 
     public static function form(Schema $schema): Schema
     {
-        return ContributorForm::configure($schema);
+        return UserForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return ContributorsTable::configure($table);
+        return UsersTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -37,6 +38,13 @@ class ContributorResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && $user->isAdmin();
     }
 
     public static function canCreate(): bool
@@ -63,9 +71,9 @@ class ContributorResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListContributors::route('/'),
-            'create' => CreateContributor::route('/create'),
-            'edit' => EditContributor::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

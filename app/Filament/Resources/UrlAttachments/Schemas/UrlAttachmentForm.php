@@ -17,6 +17,8 @@ class UrlAttachmentForm
                     ->required()
                     ->searchable()
                     ->preload(),
+                TextInput::make('label')
+                    ->maxLength(255),
                 TextInput::make('url')
                     ->required()
                     ->url()

@@ -35,8 +35,17 @@ class PaperInfolist
                     ->schema([
                         TextEntry::make('contributor.full_name')->label('Name'),
                         TextEntry::make('role')
-                            ->badge()
-                            ->formatStateUsing(fn (?string $state): array => filled($state) ? explode('|', $state) : []),
+                            ->formatStateUsing(fn (?string $state): string => filled($state) ? str_replace('|', ', ', $state) : '-'),
+                    ])
+                    ->columns(2)
+                    ->columnSpanFull(),
+                RepeatableEntry::make('urlAttachment')
+                    ->label('URL Attachments')
+                    ->schema([
+                        TextEntry::make('label')->placeholder('-'),
+                        TextEntry::make('url')
+                            ->url(fn (?string $state): ?string => $state)
+                            ->openUrlInNewTab(),
                     ])
                     ->columns(2)
                     ->columnSpanFull(),

@@ -10,17 +10,20 @@ use App\Filament\Resources\Papers\Schemas\PaperForm;
 use App\Filament\Resources\Papers\Schemas\PaperInfolist;
 use App\Filament\Resources\Papers\Tables\PapersTable;
 use App\Models\Paper;
+use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class PaperResource extends Resource
 {
     protected static ?string $model = Paper::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
     public static function form(Schema $schema): Schema
     {
@@ -42,6 +45,32 @@ class PaperResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->visibleTo(Auth::user());
+    }
+
+    public static function canView(Model $record): bool
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        return $user->isAdmin() || $record->created_by === $user->id;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return static::canView($record);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return static::canView($record);
     }
 
     public static function getPages(): array

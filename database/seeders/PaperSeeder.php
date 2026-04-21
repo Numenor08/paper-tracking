@@ -19,14 +19,17 @@ class PaperSeeder extends Seeder
             [
                 'name' => 'Razan Alhamdani',
                 'email' => 'razan@paper-tracking.test',
+                'role' => 'ADMIN',
             ],
             [
                 'name' => 'Nabila Sari',
                 'email' => 'nabila@paper-tracking.test',
+                'role' => 'USER',
             ],
             [
                 'name' => 'Fikri Hidayat',
                 'email' => 'fikri@paper-tracking.test',
+                'role' => 'USER',
             ],
         ];
 
@@ -35,10 +38,15 @@ class PaperSeeder extends Seeder
                 ['email' => $userData['email']],
                 [
                     'name' => $userData['name'],
+                    'role' => $userData['role'],
                     'password' => Hash::make('password'),
                     'email_verified_at' => now(),
                 ]
             );
+
+            User::query()
+                ->where('email', $userData['email'])
+                ->update(['role' => $userData['role']]);
         }
 
         $publicationIndexes = DB::table('publication_indexes')->pluck('id', 'name');

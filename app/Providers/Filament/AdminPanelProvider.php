@@ -17,6 +17,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -28,6 +29,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Papers Tracker')
+            // ->brandLogo(new HtmlString('<div style="display:flex;align-items:center;gap:0.5rem;"><img src="'.asset('favicon.svg').'" alt="Papers Tracker" style="height:1.5rem;width:auto;" /><span>Papers Tracker</span></div>'))
+            ->brandLogo(fn () => view('logo'))
+            ->favicon(asset('favicon.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])

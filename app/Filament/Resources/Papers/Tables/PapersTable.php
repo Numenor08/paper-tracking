@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Papers\Tables;
 
+use App\Filament\Actions\ChangePaperStatusAction;
 use App\Models\PublicationIndex;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -68,6 +69,7 @@ class PapersTable
                     ->options(PublicationIndex::query()->pluck('name', 'id')->all()),
             ])
             ->recordActions([
+                ChangePaperStatusAction::make(),
                 ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),

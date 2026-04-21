@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,11 @@ class Paper extends Model implements HasMedia
         return $this->hasMany(UrlAttachment::class);
     }
 
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(PaperStatusHistory::class, 'paper_id');
+    }
+
     public function User(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -56,5 +62,18 @@ class Paper extends Model implements HasMedia
     public function paperMedia(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'paper_media_id');
+    }
+
+    public function scopeVisibleTo(Builder $query, ?User $user): Builder
+    {
+        if ($user === null) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
+        return $query->where('created_by', $user->id);
     }
 }

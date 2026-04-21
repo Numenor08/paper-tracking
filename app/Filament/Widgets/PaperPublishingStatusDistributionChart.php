@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Paper;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class PaperPublishingStatusDistributionChart extends ChartWidget
 {
@@ -39,7 +40,10 @@ class PaperPublishingStatusDistributionChart extends ChartWidget
 
         foreach ($statuses as $status) {
             $labels[] = ucwords(strtolower(str_replace('-', ' ', $status)));
-            $data[] = Paper::query()->where('status', $status)->count();
+            $data[] = Paper::query()
+                ->visibleTo(Auth::user())
+                ->where('status', $status)
+                ->count();
         }
 
         return [
