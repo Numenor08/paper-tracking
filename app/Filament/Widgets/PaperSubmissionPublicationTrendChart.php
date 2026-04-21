@@ -36,6 +36,13 @@ class PaperSubmissionPublicationTrendChart extends ChartWidget
 
             $submissionData[] = Paper::query()
                 ->visibleTo(Auth::user())
+                ->whereIn('status', [
+                    'SUBMITTED',
+                    'UNDER-REVIEW',
+                    'REVISION-REQUESTED',
+                    'ACCEPTED',
+                    'REJECTED'
+                ])
                 ->where('created_at', '>=', $month)
                 ->where('created_at', '<', $nextMonth)
                 ->count();
