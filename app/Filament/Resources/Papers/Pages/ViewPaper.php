@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Papers\Pages;
 
+use App\Filament\Actions\ChangePaperStatusAction;
 use App\Filament\Resources\Papers\PaperResource;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
@@ -13,6 +14,7 @@ class ViewPaper extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            ChangePaperStatusAction::make(),
             EditAction::make(),
         ];
     }

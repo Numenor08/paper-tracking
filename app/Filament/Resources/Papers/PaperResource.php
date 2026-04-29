@@ -6,6 +6,7 @@ use App\Filament\Resources\Papers\Pages\CreatePaper;
 use App\Filament\Resources\Papers\Pages\EditPaper;
 use App\Filament\Resources\Papers\Pages\ListPapers;
 use App\Filament\Resources\Papers\Pages\ViewPaper;
+use App\Filament\Resources\Papers\RelationManagers\StatusHistoriesRelationManager;
 use App\Filament\Resources\Papers\Schemas\PaperForm;
 use App\Filament\Resources\Papers\Schemas\PaperInfolist;
 use App\Filament\Resources\Papers\Tables\PapersTable;
@@ -43,7 +44,7 @@ class PaperResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            StatusHistoriesRelationManager::class,
         ];
     }
 
