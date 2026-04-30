@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\ContributorController;
 use App\Http\Controllers\PaperDocumentController;
+use App\Http\Controllers\PublicDashboardController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
+Route::get('/', PublicDashboardController::class)->name('public.dashboard');
+Route::get('/public/api/statistics', [PublicDashboardController::class, 'statistics'])->name('public.api.statistics');
+Route::get('/public/api/papers', [PublicDashboardController::class, 'papers'])->name('public.api.papers');
+Route::get('/public/api/contributors', [PublicDashboardController::class, 'contributors'])->name('public.api.contributors');
+Route::get('/public/api/status-distribution', [PublicDashboardController::class, 'statusDistribution'])->name('public.api.status_distribution');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
