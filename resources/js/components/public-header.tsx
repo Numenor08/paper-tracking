@@ -53,13 +53,13 @@ export function PublicHeader() {
                     </button>
 
                     {/* Admin Link */}
-                    <Link
+                    <a
                         href="/admin"
                         className="inline-flex items-center gap-2 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-600"
                     >
                         <LayoutDashboard className="h-4 w-4" />
                         <span>Admin</span>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </header>
