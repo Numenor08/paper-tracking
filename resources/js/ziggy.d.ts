@@ -26,6 +26,37 @@ declare module 'ziggy-js' {
             "required": true
         }
     ],
+    "filament.admin.resources.papers.index": [],
+    "filament.admin.resources.papers.create": [],
+    "filament.admin.resources.papers.view": [
+        {
+            "name": "record",
+            "required": true
+        }
+    ],
+    "filament.admin.resources.papers.edit": [
+        {
+            "name": "record",
+            "required": true
+        }
+    ],
+    "filament.admin.resources.publication-indices.index": [],
+    "filament.admin.resources.url-attachments.index": [],
+    "filament.admin.resources.url-attachments.create": [],
+    "filament.admin.resources.url-attachments.edit": [
+        {
+            "name": "record",
+            "required": true
+        }
+    ],
+    "filament.admin.resources.users.index": [],
+    "filament.admin.resources.users.create": [],
+    "filament.admin.resources.users.edit": [
+        {
+            "name": "record",
+            "required": true
+        }
+    ],
     "boost.browser-logs": [],
     "login": [],
     "login.store": [],
@@ -73,33 +104,17 @@ declare module 'ziggy-js' {
             "required": true
         }
     ],
-    "home": [],
     "dashboard": [],
-    "contributor.index": [],
-    "contributor.create": [],
-    "contributor.store": [],
-    "contributor.show": [
+    "papers.documents.preview": [
         {
-            "name": "contributor",
-            "required": true
-        }
-    ],
-    "contributor.edit": [
-        {
-            "name": "contributor",
-            "required": true
-        }
-    ],
-    "contributor.update": [
-        {
-            "name": "contributor",
+            "name": "paper",
             "required": true,
             "binding": "id"
         }
     ],
-    "contributor.destroy": [
+    "papers.documents.download": [
         {
-            "name": "contributor",
+            "name": "paper",
             "required": true,
             "binding": "id"
         }

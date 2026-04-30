@@ -14,7 +14,7 @@ export function PaginatedPapers() {
     const visitDashboard = useCallback(
         (page: number, searchQuery: string, perPage?: number) => {
             router.get(
-                route('public.dashboard'),
+                route('dashboard'),
                 {
                     page,
                     per_page: perPage ?? filters.per_page,

@@ -4,8 +4,7 @@ use App\Http\Controllers\PaperDocumentController;
 use App\Http\Controllers\PublicDashboardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', PublicDashboardController::class)->name('public.dashboard');
-Route::inertia('dashboard', 'dashboard')->name('dashboard');
+Route::get('/', PublicDashboardController::class)->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/papers/{paper}/document/preview', [PaperDocumentController::class, 'preview'])

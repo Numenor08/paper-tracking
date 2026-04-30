@@ -113,16 +113,3 @@ export function useAppearance(): UseAppearanceReturn {
 
     return { appearance, resolvedAppearance, updateAppearance } as const
 }
-
-// Global setter for immediate theme changes from non-hook callers
-export function setGlobalAppearance(mode: Appearance): void {
-    if (typeof window === 'undefined') {
-        return
-    }
-
-    currentAppearance = mode
-    localStorage.setItem('appearance', mode)
-    setCookie('appearance', mode)
-    applyTheme(mode)
-    notify()
-}
