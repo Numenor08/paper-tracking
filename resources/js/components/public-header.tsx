@@ -1,13 +1,15 @@
 import { Link } from '@inertiajs/react'
 import { LayoutDashboard, Moon, Sun } from 'lucide-react'
-import { useEffect } from 'react'
-import { useAppearance, setGlobalAppearance } from '@/hooks/use-appearance'
+import { useEffect, useState } from 'react'
+import { useAppearance } from '@/hooks/use-appearance'
 
 export function PublicHeader() {
     // Use shared appearance hook so toggle stays in sync
     const { resolvedAppearance, updateAppearance } = useAppearance()
+    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
+        setMounted(true)
         // ensure resolvedAppearance is applied on mount (no-op if already set)
         updateAppearance(resolvedAppearance)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -17,7 +19,7 @@ export function PublicHeader() {
         // Toggle between dark and light only
         const next = resolvedAppearance === 'dark' ? 'light' : 'dark'
         // Use global setter to ensure immediate DOM update and notify subscribers
-        setGlobalAppearance(next)
+        updateAppearance(next)
     }
 
     return (
@@ -43,7 +45,7 @@ export function PublicHeader() {
                         className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
                         aria-label="Toggle theme"
                     >
-                        {resolvedAppearance === 'dark' ? (
+                        {!mounted ? null : resolvedAppearance === 'dark' ? (
                             <Sun className="h-4 w-4" />
                         ) : (
                             <Moon className="h-4 w-4" />
