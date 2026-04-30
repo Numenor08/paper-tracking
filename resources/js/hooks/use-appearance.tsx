@@ -116,7 +116,9 @@ export function useAppearance(): UseAppearanceReturn {
 
 // Global setter for immediate theme changes from non-hook callers
 export function setGlobalAppearance(mode: Appearance): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') {
+        return
+    }
 
     currentAppearance = mode
     localStorage.setItem('appearance', mode)

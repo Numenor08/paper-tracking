@@ -56,7 +56,9 @@ export function PapersList({ papers, isLoading = false }: PapersListProps) {
                             className="border-b border-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900/50"
                         >
                             <td className="px-4 py-3 text-sm text-neutral-900 dark:text-neutral-100">
-                                <span className="font-medium">{paper.title}</span>
+                                <span className="font-medium">
+                                    {paper.title}
+                                </span>
                             </td>
                             <td className="px-4 py-3 text-sm">
                                 <span className="inline-flex rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">

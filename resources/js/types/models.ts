@@ -18,9 +18,27 @@ export interface StatusDistributionItem {
     count: number
 }
 
+export interface PaperPagination {
+    data: Paper[]
+    current_page: number
+    from: number | null
+    last_page: number
+    links: {
+        url: string | null
+        label: string
+        active: boolean
+    }[]
+    per_page: number
+    to: number | null
+    total: number
+}
+
 export interface PublicDashboardData {
     stats: PublicDashboardStats
-    recent_papers: Paper[]
-    recent_contributors: any[]
-    status_distribution?: StatusDistributionItem[]
+    recent_papers: PaperPagination
+    status_distribution: StatusDistributionItem[]
+    filters: {
+        search: string
+        per_page: number
+    }
 }

@@ -15,11 +15,9 @@ export default function PublicLayout({
     return (
         <div className="flex min-h-screen flex-col bg-white dark:bg-neutral-950">
             <PublicHeader />
-            <main className="flex-1">
-                {children}
-            </main>
+            <main className="flex-1">{children}</main>
             <footer className="border-t border-neutral-200 bg-neutral-50 py-8 dark:border-neutral-800 dark:bg-neutral-900">
-                <div className="mx-auto max-w-7xl px-4 text-center text-sm text-neutral-600 dark:text-neutral-400 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-4 text-center text-sm text-neutral-600 sm:px-6 lg:px-8 dark:text-neutral-400">
                     <p>&copy; 2026 Paper Tracking. All rights reserved.</p>
                 </div>
             </footer>

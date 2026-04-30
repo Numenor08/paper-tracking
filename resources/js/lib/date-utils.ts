@@ -1,5 +1,6 @@
 export function formatDate(date: string | Date): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date
+
     return dateObj.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -9,6 +10,7 @@ export function formatDate(date: string | Date): string {
 
 export function formatDateTime(date: string | Date): string {
     const dateObj = typeof date === 'string' ? new Date(date) : date
+
     return dateObj.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
