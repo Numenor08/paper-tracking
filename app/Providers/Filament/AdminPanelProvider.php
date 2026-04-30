@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\Login as LoginPage;
 use App\Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -28,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(LoginPage::class)
             ->brandName('Papers Tracker')
             // ->brandLogo(new HtmlString('<div style="display:flex;align-items:center;gap:0.5rem;"><img src="'.asset('favicon.svg').'" alt="Papers Tracker" style="height:1.5rem;width:auto;" /><span>Papers Tracker</span></div>'))
             ->brandLogo(fn () => view('logo'))
