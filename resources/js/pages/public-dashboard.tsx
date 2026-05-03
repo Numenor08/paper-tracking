@@ -47,8 +47,8 @@ export default function PublicDashboard() {
                 </div>
 
                 {/* Data Tables Section */}
-                <div className="grid gap-8 lg:grid-cols-3">
-                    <div className="col-span-2 space-y-8">
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="col-span-1 space-y-8 md:col-span-1 lg:col-span-2">
                         <h2 className="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">
                             Papers
                         </h2>
@@ -57,11 +57,11 @@ export default function PublicDashboard() {
                         </div>
                     </div>
 
-                    <div className="relative col-span-1">
+                    <div className="col-span-1">
                         <h2 className="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">
                             Status Distribution
                         </h2>
-                        <div className="top-6 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
                             <StatusChart data={status_distribution} />
                         </div>
                     </div>

@@ -4,7 +4,22 @@ export interface Paper {
     status: string
     created_at: string
     updated_at: string
+    contributors: Contributor[]
     contributors_count?: number
+}
+
+export interface Contributor {
+    id: string
+    full_name: string
+    pivot: Pivot
+}
+
+export interface Pivot {
+    paper_id: string
+    contributor_id: string
+    role: string
+    created_at: string
+    updated_at: string
 }
 
 export interface PublicDashboardStats {

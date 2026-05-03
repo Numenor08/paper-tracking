@@ -19,16 +19,13 @@ class PublicDashboardController extends Controller
             $perPage = 10;
         }
 
-        // Get total counts for stats
         $totalPapers = Paper::count();
         $totalContributors = Contributor::count();
 
-        // Get recent activity count (status changes in last 30 days)
         $recentActivityCount = PaperStatusHistory::where('created_at', '>=', now()->subDays(30))->count();
 
-        // Get recent papers (last 10, excluding drafts if applicable)
-        $paginatedPapers = Paper::query()
-            ->select(['id', 'title', 'status', 'created_at'])
+        $paginatedPapers = Paper::select(['id', 'title', 'status', 'created_at']) // 'id' wajib ada
+            ->with('contributors:id,full_name')
             ->withCount('contributors')
             ->when($search !== '', function ($query) use ($search) {
                 $query->where('title', 'like', "%{$search}%");
@@ -37,7 +34,6 @@ class PublicDashboardController extends Controller
             ->paginate($perPage)
             ->withQueryString();
 
-        // Status distribution for SSR render
         $distribution = Paper::query()
             ->selectRaw('status, COUNT(*) as count')
             ->groupBy('status')

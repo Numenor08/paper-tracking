@@ -11,8 +11,6 @@ class PaperDocumentController extends Controller
 {
     public function preview(Request $request, Paper $paper): StreamedResponse
     {
-        $this->authorizePaperAccess($paper, $request->user());
-
         $media = $paper->getFirstMedia('paper_documents');
 
         abort_if($media === null, 404);
@@ -22,8 +20,6 @@ class PaperDocumentController extends Controller
 
     public function download(Request $request, Paper $paper): StreamedResponse
     {
-        $this->authorizePaperAccess($paper, $request->user());
-
         $media = $paper->getFirstMedia('paper_documents');
 
         abort_if($media === null, 404);

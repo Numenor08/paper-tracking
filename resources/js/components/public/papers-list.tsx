@@ -1,4 +1,13 @@
+import { Link } from '@inertiajs/react'
+import { Fragment } from 'react'
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { formatDate } from '@/lib/date-utils'
+import { statusColorMap } from '@/lib/status-map'
+import { cn } from '@/lib/utils'
 import type { Paper } from '@/types'
 
 interface PapersListProps {
@@ -56,17 +65,95 @@ export function PapersList({ papers, isLoading = false }: PapersListProps) {
                             className="border-b border-neutral-100 hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900/50"
                         >
                             <td className="px-4 py-3 text-sm text-neutral-900 dark:text-neutral-100">
-                                <span className="font-medium">
+                                <Link
+                                    href={`/papers/${paper.id}`}
+                                    className="font-medium hover:underline hover:brightness-150"
+                                >
                                     {paper.title}
-                                </span>
+                                </Link>
                             </td>
                             <td className="px-4 py-3 text-sm">
-                                <span className="inline-flex rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200">
+                                <span
+                                    className={cn(
+                                        'inline-flex w-fit shrink-0 items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
+                                        statusColorMap[paper.status]?.bg ||
+                                            'bg-slate-100 dark:bg-slate-900',
+                                        statusColorMap[paper.status]?.text ||
+                                            'text-slate-700 dark:text-slate-200',
+                                        statusColorMap[paper.status]?.border ||
+                                            'border-slate-300 dark:border-slate-700',
+                                    )}
+                                >
                                     {paper.status}
                                 </span>
                             </td>
                             <td className="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-400">
-                                {paper.contributors_count || 0}
+                                {paper.contributors.length === 0 ? (
+                                    <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                                        No Contributors
+                                    </span>
+                                ) : (
+                                    paper.contributors.map(
+                                        (contributor, index) => {
+                                            const nameParts =
+                                                contributor.full_name.split(' ')
+                                            const showFullName =
+                                                paper.contributors.length ===
+                                                    1 || nameParts.length === 1
+                                            const displayName = showFullName
+                                                ? contributor.full_name
+                                                : nameParts[0]
+                                            const isLastItem =
+                                                index ===
+                                                paper.contributors.length - 1
+
+                                            return (
+                                                <Fragment
+                                                    key={
+                                                        contributor.id || index
+                                                    }
+                                                >
+                                                    <Tooltip>
+                                                        <TooltipTrigger className="hover:underline hover:brightness-150 focus:outline-none">
+                                                            {displayName}
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <div className="text-sm">
+                                                                <p className="font-medium">
+                                                                    {
+                                                                        contributor.full_name
+                                                                    }
+                                                                </p>
+                                                                {contributor
+                                                                    .pivot
+                                                                    ?.role && (
+                                                                    <p className="text-xs text-neutral-400 capitalize">
+                                                                        Role:{' '}
+                                                                        {contributor.pivot.role
+                                                                            .replace(
+                                                                                /-/g,
+                                                                                ' ',
+                                                                            )
+                                                                            .replace(
+                                                                                /\|/g,
+                                                                                ', ',
+                                                                            )}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+
+                                                    {!isLastItem && (
+                                                        <span className="mr-1">
+                                                            ,
+                                                        </span>
+                                                    )}
+                                                </Fragment>
+                                            )
+                                        },
+                                    )
+                                )}
                             </td>
                             <td className="px-4 py-3 text-sm text-neutral-600 dark:text-neutral-400">
                                 {formatDate(paper.created_at)}

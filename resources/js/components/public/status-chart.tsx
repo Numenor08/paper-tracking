@@ -22,21 +22,21 @@ export function StatusChart({
                     <div
                         key={d.status}
                         data-testid="status-row"
-                        className="flex items-center gap-4"
+                        className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4"
                     >
-                        <div className="w-44 truncate text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                        <div className="w-full truncate text-sm font-medium text-neutral-700 sm:w-32 md:w-44 dark:text-neutral-300">
                             {d.status}
                         </div>
-                        <div className="flex-1">
-                            <div className="h-3 w-full rounded-full bg-neutral-200 dark:bg-neutral-800">
+                        <div className="flex flex-1 items-center gap-2">
+                            <div className="h-3 flex-1 rounded-full bg-neutral-200 dark:bg-neutral-800">
                                 <div
                                     className="h-3 rounded-full bg-amber-600 dark:bg-amber-500"
                                     style={{ width: `${pct}%` }}
                                 />
                             </div>
-                        </div>
-                        <div className="w-12 text-right text-sm text-neutral-600 dark:text-neutral-400">
-                            {d.count}
+                            <div className="w-12 text-right text-sm text-neutral-600 dark:text-neutral-400">
+                                {d.count}
+                            </div>
                         </div>
                     </div>
                 )

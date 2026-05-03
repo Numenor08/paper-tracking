@@ -10,7 +10,6 @@ export function PaginatedPapers() {
     const [search, setSearch] = useState<string>(filters.search)
     const [loading, setLoading] = useState(false)
     const deferredSearch = useDeferredValue(search)
-
     const visitDashboard = useCallback(
         (page: number, searchQuery: string, perPage?: number) => {
             router.get(
