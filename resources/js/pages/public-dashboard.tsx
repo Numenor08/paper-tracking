@@ -12,13 +12,13 @@ export default function PublicDashboard() {
     return (
         <>
             <Head title="Public Dashboard - Paper Tracking" />
-            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
                 {/* Hero Section */}
-                <div className="mb-12">
-                    <h1 className="text-4xl font-bold text-neutral-900 dark:text-white">
+                <div className="mb-8 sm:mb-12">
+                    <h1 className="text-2xl font-bold text-neutral-900 sm:text-3xl lg:text-4xl dark:text-white">
                         Paper Tracking Analytics
                     </h1>
-                    <p className="mt-2 text-lg text-neutral-600 dark:text-neutral-400">
+                    <p className="mt-2 text-sm text-neutral-600 sm:text-base lg:text-lg dark:text-neutral-400">
                         Real-time insights into our research papers and
                         contributors
                     </p>
@@ -49,19 +49,19 @@ export default function PublicDashboard() {
                 {/* Data Tables Section */}
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     <div className="col-span-1 space-y-8 md:col-span-1 lg:col-span-2">
-                        <h2 className="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">
+                        <h2 className="mb-4 text-xl font-bold text-neutral-900 sm:mb-6 sm:text-2xl dark:text-white">
                             Papers
                         </h2>
-                        <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white p-3 sm:p-4 dark:border-neutral-800 dark:bg-neutral-900">
                             <PaginatedPapers />
                         </div>
                     </div>
 
                     <div className="col-span-1">
-                        <h2 className="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">
+                        <h2 className="mb-4 text-xl font-bold text-neutral-900 sm:mb-6 sm:text-2xl dark:text-white">
                             Status Distribution
                         </h2>
-                        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="rounded-lg border border-neutral-200 bg-white p-3 sm:p-4 dark:border-neutral-800 dark:bg-neutral-900">
                             <StatusChart data={status_distribution} />
                         </div>
                     </div>

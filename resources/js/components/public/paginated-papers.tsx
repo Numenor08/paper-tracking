@@ -38,8 +38,9 @@ export function PaginatedPapers() {
 
     return (
         <div className="space-y-4 p-4">
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+            {/* Controls - Stack on mobile */}
+            <div className="space-y-3 sm:flex sm:items-center sm:justify-between sm:space-y-0">
+                <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
                     <label className="text-sm text-neutral-600 dark:text-neutral-400">
                         Show
                     </label>
@@ -49,30 +50,31 @@ export function PaginatedPapers() {
                             const selectedPerPage = Number(e.target.value)
                             visitDashboard(1, deferredSearch, selectedPerPage)
                         }}
-                        className="rounded border px-2 py-1"
+                        className="rounded border border-neutral-200 px-2 py-1.5 text-sm dark:border-neutral-800 dark:bg-neutral-800"
                     >
                         <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={25}>25</option>
                     </select>
                 </div>
-                <div>
+                <div className="w-full sm:w-auto">
                     <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search papers..."
-                        className="rounded border px-3 py-1"
+                        className="w-full rounded border border-neutral-200 px-3 py-1.5 text-sm sm:w-auto dark:border-neutral-800 dark:bg-neutral-800"
                     />
                 </div>
             </div>
 
             <PapersList papers={recent_papers.data} isLoading={loading} />
 
-            <div className="flex items-center justify-between">
-                <div className="text-sm text-neutral-600 dark:text-neutral-400">
+            {/* Pagination - Stack on mobile */}
+            <div className="space-y-3 sm:flex sm:items-center sm:justify-between sm:space-y-0">
+                <div className="text-center text-sm text-neutral-600 sm:text-left dark:text-neutral-400">
                     {`Page ${recent_papers.current_page} of ${recent_papers.last_page}`}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                     <button
                         disabled={recent_papers.current_page <= 1 || loading}
                         onClick={() =>
@@ -81,7 +83,7 @@ export function PaginatedPapers() {
                                 deferredSearch,
                             )
                         }
-                        className="rounded border px-3 py-1 disabled:opacity-50"
+                        className="rounded border border-neutral-200 px-3 py-1.5 text-sm transition-colors hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
                     >
                         Prev
                     </button>
@@ -96,7 +98,7 @@ export function PaginatedPapers() {
                                 deferredSearch,
                             )
                         }
-                        className="rounded border px-3 py-1 disabled:opacity-50"
+                        className="rounded border border-neutral-200 px-3 py-1.5 text-sm transition-colors hover:bg-neutral-50 disabled:opacity-50 dark:border-neutral-800 dark:hover:bg-neutral-800"
                     >
                         Next
                     </button>

@@ -86,7 +86,7 @@ const StatusHistorySection: FC<StatusHistorySectionProps> = ({
     return (
         <div
             key={paperId}
-            className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
+            className="rounded-lg border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-800 dark:bg-neutral-900"
         >
             <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                 Status History
@@ -94,7 +94,8 @@ const StatusHistorySection: FC<StatusHistorySectionProps> = ({
 
             {statusHistories.length ? (
                 <>
-                    <div className="mt-4 overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="mt-4 hidden overflow-x-auto sm:block">
                         <table className="min-w-full divide-y divide-neutral-200 text-sm dark:divide-neutral-800">
                             <thead>
                                 <tr className="text-left text-neutral-500 dark:text-neutral-400">
@@ -150,13 +151,65 @@ const StatusHistorySection: FC<StatusHistorySectionProps> = ({
                         </table>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-between gap-3 text-sm text-neutral-600 dark:text-neutral-400">
-                        <div>
+                    {/* Mobile Card View */}
+                    <div className="mt-4 space-y-3 sm:hidden">
+                        {visibleStatusHistories.map((history) => (
+                            <div
+                                key={history.id}
+                                className="space-y-2 rounded-lg border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-800 dark:bg-neutral-800"
+                            >
+                                <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                                    <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                                        {history.changed_at
+                                            ? formatDateTime(history.changed_at)
+                                            : '-'}
+                                    </span>
+                                    <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                                        by{' '}
+                                        {history.changed_by?.name ?? 'Sistem'}
+                                    </span>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <div>
+                                        <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
+                                            Old Status:
+                                        </span>
+                                        <div className="mt-1">
+                                            <span
+                                                className={getStatusBadgeClasses(
+                                                    history.old_status,
+                                                )}
+                                            >
+                                                {history.old_status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
+                                            New Status:
+                                        </span>
+                                        <div className="mt-1">
+                                            <span
+                                                className={getStatusBadgeClasses(
+                                                    history.new_status,
+                                                )}
+                                            >
+                                                {history.new_status}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="mt-4 flex flex-col gap-3 text-sm text-neutral-600 sm:flex-row sm:items-center sm:justify-between dark:text-neutral-400">
+                        <div className="text-center sm:text-left">
                             Showing {showingStart} to {showingEnd} of{' '}
                             {statusHistories.length}
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-2">
                             <button
                                 type="button"
                                 onClick={() =>
@@ -214,26 +267,26 @@ const PaperShow: FC = () => {
         <>
             <Head title={`${paper.title} - Paper`} />
 
-            <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl overflow-x-clip px-4 py-6 sm:px-6 sm:py-12 lg:px-8">
                 <button
                     onClick={() => router.get('/')}
-                    className="mb-6 inline-flex cursor-pointer items-center gap-2 text-sm text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+                    className="mb-4 inline-flex cursor-pointer items-center gap-2 text-sm text-neutral-600 transition-colors hover:text-neutral-900 sm:mb-6 dark:text-neutral-400 dark:hover:text-white"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     Back
                 </button>
 
-                <div className="mb-6 flex items-start justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
+                <div className="mb-4 flex flex-col gap-4 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                        <h1 className="text-2xl font-bold wrap-break-word text-neutral-900 sm:text-3xl dark:text-white">
                             {paper.title}
                         </h1>
-                        <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                        <p className="mt-2 truncate text-sm text-neutral-600 dark:text-neutral-400">
                             {paper.index?.name ?? ''}
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex shrink-0 items-center gap-3">
                         <span
                             className={cn(
                                 'inline-flex w-fit shrink-0 items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
@@ -251,8 +304,8 @@ const PaperShow: FC = () => {
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-3">
-                    <div className="col-span-2 space-y-6">
-                        <div className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+                    <div className="col-span-1 min-w-0 space-y-6 md:col-span-2">
+                        <div className="rounded-lg border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-800 dark:bg-neutral-900">
                             <h2 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                                 Abstract
                             </h2>
@@ -261,11 +314,11 @@ const PaperShow: FC = () => {
                             </p>
                         </div>
 
-                        <div className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
+                        <div className="rounded-lg border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-800 dark:bg-neutral-900">
                             <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
                                 Attachments
                             </h3>
-                            <div className="mt-4 space-y-4">
+                            <div className="mt-4 min-w-0 space-y-4">
                                 {paper.document ? (
                                     <div className="space-y-4">
                                         <h4 className="text-xs font-medium text-neutral-600 uppercase dark:text-neutral-400">
@@ -309,9 +362,9 @@ const PaperShow: FC = () => {
                         />
                     </div>
 
-                    <aside className="col-span-1">
-                        <div className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900">
-                            <div className="space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
+                    <aside className="col-span-1 min-w-0 md:col-span-1">
+                        <div className="rounded-lg border border-neutral-200 bg-white p-4 sm:p-6 dark:border-neutral-800 dark:bg-neutral-900">
+                            <div className="min-w-0 space-y-2 text-sm text-neutral-600 dark:text-neutral-400">
                                 <div>
                                     <span className="block font-medium text-neutral-900 dark:text-white">
                                         Contributors
@@ -321,9 +374,9 @@ const PaperShow: FC = () => {
                                             {contributors.map((contributor) => (
                                                 <div
                                                     key={contributor.id}
-                                                    className="space-y-1 rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800"
+                                                    className="min-w-0 space-y-1 rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800"
                                                 >
-                                                    <div className="truncate font-medium text-neutral-900 dark:text-white">
+                                                    <div className="min-w-0 truncate font-medium text-neutral-900 dark:text-white">
                                                         {contributor.full_name}
                                                     </div>
                                                     <div className="flex flex-wrap gap-1.5">

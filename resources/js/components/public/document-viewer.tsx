@@ -101,9 +101,9 @@ export function DocumentViewer({ document }: DocumentViewerProps) {
     }
 
     return (
-        <div className="rounded-lg border border-neutral-200 bg-linear-to-br from-neutral-50 to-neutral-100 p-4 dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
-            <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+        <div className="w-full min-w-0 rounded-lg border border-neutral-200 bg-linear-to-br from-neutral-50 to-neutral-100 p-4 dark:border-neutral-800 dark:from-neutral-900 dark:to-neutral-800">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                     <FileIcon className="h-6 w-6 text-primary" />
                 </div>
 
@@ -117,7 +117,7 @@ export function DocumentViewer({ document }: DocumentViewerProps) {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:justify-end">
                     {isPdfFile && document.preview_url && (
                         <button
                             onClick={() =>
