@@ -1,21 +1,214 @@
 import { Head, router, usePage } from '@inertiajs/react'
 import { ArrowLeft } from 'lucide-react'
 import type { FC } from 'react'
+import { useState } from 'react'
 import { DocumentViewer } from '@/components/public/document-viewer'
-import { formatDate } from '@/lib/date-utils'
+import { formatDate, formatDateTime } from '@/lib/date-utils'
 import { statusColorMap } from '@/lib/status-map'
 import { cn } from '@/lib/utils'
 
+type PaperContributor = {
+    id: string
+    full_name: string
+    role: string | null
+}
+
+type StatusHistory = {
+    id: number
+    old_status: string
+    new_status: string
+    changed_at: string | null
+    changed_by: {
+        id: number
+        name: string
+    } | null
+}
+
+const getStatusBadgeClasses = (status: string): string => {
+    return cn(
+        'inline-flex w-fit shrink-0 items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
+        statusColorMap[status]?.bg || 'bg-slate-100 dark:bg-slate-900',
+        statusColorMap[status]?.text || 'text-slate-700 dark:text-slate-200',
+        statusColorMap[status]?.border ||
+            'border-slate-300 dark:border-slate-700',
+    )
+}
+
+const formatContributorRole = (role: string | null): string => {
+    if (!role) {
+        return 'No role assigned'
+    }
+
+    return role.replaceAll('|', ', ')
+}
+
+const getContributorRoles = (role: string | null): string[] => {
+    if (!role) {
+        return []
+    }
+
+    return role
+        .split('|')
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+}
+
+type StatusHistorySectionProps = {
+    paperId: string
+    statusHistories: StatusHistory[]
+}
+
+const StatusHistorySection: FC<StatusHistorySectionProps> = ({
+    paperId,
+    statusHistories,
+}) => {
+    const statusHistoryPerPage = 5
+    const [statusHistoryPage, setStatusHistoryPage] = useState(1)
+
+    const totalStatusHistoryPages = Math.max(
+        1,
+        Math.ceil(statusHistories.length / statusHistoryPerPage),
+    )
+
+    const visibleStatusHistories = statusHistories.slice(
+        (statusHistoryPage - 1) * statusHistoryPerPage,
+        statusHistoryPage * statusHistoryPerPage,
+    )
+    const showingStart = Math.min(
+        (statusHistoryPage - 1) * statusHistoryPerPage + 1,
+        statusHistories.length,
+    )
+    const showingEnd = Math.min(
+        statusHistoryPage * statusHistoryPerPage,
+        statusHistories.length,
+    )
+
+    return (
+        <div
+            key={paperId}
+            className="rounded-lg border border-neutral-200 bg-white p-6 dark:border-neutral-800 dark:bg-neutral-900"
+        >
+            <h3 className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+                Status History
+            </h3>
+
+            {statusHistories.length ? (
+                <>
+                    <div className="mt-4 overflow-x-auto">
+                        <table className="min-w-full divide-y divide-neutral-200 text-sm dark:divide-neutral-800">
+                            <thead>
+                                <tr className="text-left text-neutral-500 dark:text-neutral-400">
+                                    <th className="pr-4 pb-3 font-medium">
+                                        Changed At
+                                    </th>
+                                    <th className="pr-4 pb-3 font-medium">
+                                        Old Status
+                                    </th>
+                                    <th className="pr-4 pb-3 font-medium">
+                                        New Status
+                                    </th>
+                                    <th className="pr-4 pb-3 font-medium">
+                                        Changed By
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
+                                {visibleStatusHistories.map((history) => (
+                                    <tr key={history.id}>
+                                        <td className="py-3 pr-4 whitespace-nowrap text-neutral-600 dark:text-neutral-400">
+                                            {history.changed_at
+                                                ? formatDateTime(
+                                                      history.changed_at,
+                                                  )
+                                                : '-'}
+                                        </td>
+                                        <td className="py-3 pr-4">
+                                            <span
+                                                className={getStatusBadgeClasses(
+                                                    history.old_status,
+                                                )}
+                                            >
+                                                {history.old_status}
+                                            </span>
+                                        </td>
+                                        <td className="py-3 pr-4">
+                                            <span
+                                                className={getStatusBadgeClasses(
+                                                    history.new_status,
+                                                )}
+                                            >
+                                                {history.new_status}
+                                            </span>
+                                        </td>
+                                        <td className="py-3 pr-4 whitespace-nowrap text-neutral-600 dark:text-neutral-400">
+                                            {history.changed_by?.name ??
+                                                'Sistem'}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between gap-3 text-sm text-neutral-600 dark:text-neutral-400">
+                        <div>
+                            Showing {showingStart} to {showingEnd} of{' '}
+                            {statusHistories.length}
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setStatusHistoryPage((current) =>
+                                        Math.max(1, current - 1),
+                                    )
+                                }
+                                disabled={statusHistoryPage === 1}
+                                className="inline-flex items-center rounded-md border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                            >
+                                Previous
+                            </button>
+
+                            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                                Page {statusHistoryPage} of{' '}
+                                {totalStatusHistoryPages}
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setStatusHistoryPage((current) =>
+                                        Math.min(
+                                            totalStatusHistoryPages,
+                                            current + 1,
+                                        ),
+                                    )
+                                }
+                                disabled={
+                                    statusHistoryPage ===
+                                    totalStatusHistoryPages
+                                }
+                                className="inline-flex items-center rounded-md border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <div className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+                    No status history available.
+                </div>
+            )}
+        </div>
+    )
+}
+
 const PaperShow: FC = () => {
     const { paper } = usePage().props as any
-
-    // Debug: Log paper data
-    console.log('[PaperShow] Paper data:', {
-        title: paper.title,
-        hasDocument: !!paper.document,
-        document: paper.document,
-        urlAttachments: paper.url_attachments,
-    })
+    const contributors = (paper.contributors ?? []) as PaperContributor[]
+    const statusHistories = (paper.status_histories ?? []) as StatusHistory[]
 
     return (
         <>
@@ -108,6 +301,12 @@ const PaperShow: FC = () => {
                                 ) : null}
                             </div>
                         </div>
+
+                        <StatusHistorySection
+                            key={paper.id}
+                            paperId={paper.id}
+                            statusHistories={statusHistories}
+                        />
                     </div>
 
                     <aside className="col-span-1">
@@ -117,18 +316,40 @@ const PaperShow: FC = () => {
                                     <span className="block font-medium text-neutral-900 dark:text-white">
                                         Contributors
                                     </span>
-                                    {paper.contributors?.length ? (
-                                        <div className="mt-1">
-                                            {paper.contributors.map(
-                                                (c: any) => (
-                                                    <div
-                                                        key={c.id}
-                                                        className="truncate"
-                                                    >
-                                                        {c.full_name}
+                                    {contributors.length ? (
+                                        <div className="mt-2 space-y-3">
+                                            {contributors.map((contributor) => (
+                                                <div
+                                                    key={contributor.id}
+                                                    className="space-y-1 rounded-md border border-neutral-200 px-3 py-2 dark:border-neutral-800"
+                                                >
+                                                    <div className="truncate font-medium text-neutral-900 dark:text-white">
+                                                        {contributor.full_name}
                                                     </div>
-                                                ),
-                                            )}
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {getContributorRoles(
+                                                            contributor.role,
+                                                        ).length ? (
+                                                            getContributorRoles(
+                                                                contributor.role,
+                                                            ).map((role) => (
+                                                                <span
+                                                                    key={`${contributor.id}-${role}`}
+                                                                    className="inline-flex w-fit rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                                                                >
+                                                                    {role}
+                                                                </span>
+                                                            ))
+                                                        ) : (
+                                                            <span className="inline-flex w-fit rounded-full border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+                                                                {formatContributorRole(
+                                                                    contributor.role,
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
                                     ) : (
                                         <div className="mt-1 text-neutral-500">
