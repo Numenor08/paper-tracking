@@ -29,6 +29,36 @@ class PaperForm
         ];
     }
 
+    /**
+     * @return array<int, string>
+     */
+    public static function normalizeContributorRoles(mixed $state): array
+    {
+        if (is_string($state)) {
+            $state = filled($state) ? explode('|', $state) : [];
+        }
+
+        if (! is_array($state)) {
+            return [];
+        }
+
+        $roles = array_map(static fn (mixed $role): string => trim((string) $role), $state);
+        $roles = array_filter($roles, static fn (string $role): bool => filled($role));
+
+        return array_values(array_unique($roles));
+    }
+
+    public static function serializeContributorRoles(mixed $state): ?string
+    {
+        $roles = static::normalizeContributorRoles($state);
+
+        if ($roles === []) {
+            return null;
+        }
+
+        return implode('|', $roles);
+    }
+
     public static function configure(Schema $schema): Schema
     {
         return $schema
@@ -67,11 +97,9 @@ class PaperForm
                             ->options(ContributorPaper::ROLE_OPTIONS)
                             ->multiple()
                             ->afterStateHydrated(function (Select $component, mixed $state): void {
-                                if (is_string($state) && filled($state)) {
-                                    $component->state(explode('|', $state));
-                                }
+                                $component->state(static::normalizeContributorRoles($state));
                             })
-                            ->dehydrateStateUsing(fn (mixed $state): ?string => is_array($state) ? implode('|', $state) : $state)
+                            ->dehydrateStateUsing(fn (mixed $state): ?string => static::serializeContributorRoles($state))
                             ->required(),
                     ])
                     ->columns(2)
